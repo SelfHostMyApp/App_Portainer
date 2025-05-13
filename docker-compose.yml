@@ -1,0 +1,25 @@
+x-basics: &basics
+  env_file:
+    - .env
+  restart: unless-stopped
+services:
+  portainer:
+    container_name: admin
+    image: portainer/portainer-ce:latest
+    <<: *basics
+    ports:
+      - 9000:9000
+    volumes:
+      - /nursegpt/containers/data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    networks:
+      core:
+        ipv4_address: 172.20.0.3
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.rule=Host(`admin.zephyrex.dev`)"
+      - "traefik.http.routers.portainer.entrypoints=websecure"
+      - "traefik.http.routers.portainer.middlewares=dashboard-auth,cloudflare-ipallowlist@file"
+      - "traefik.http.routers.portainer.tls.certresolver=cloudflare"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
