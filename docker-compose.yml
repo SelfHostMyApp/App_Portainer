@@ -4,12 +4,12 @@ x-basics: &basics
   restart: unless-stopped
 services:
   portainer:
-    image: portainer/portainer-ce:latest
+    image: portainer/portainer-ce:${PORTAINER_VERSION:-latest}
     <<: *basics
     ports:
-      - 9000:9000
+      - ${PORTAINER_PORT:-9000}:9000
     volumes:
-      - /nursegpt/containers/data:/data
+      - /containers/data:/data
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
     networks:
@@ -17,8 +17,8 @@ services:
         ipv4_address: 172.20.0.3
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.portainer.rule=Host(`admin.zephyrex.dev`)"
+      - "traefik.http.routers.portainer.rule=Host(`${PORTAINER_SUBDOMAIN}.${ROOT_DOMAIN}`)"
       - "traefik.http.routers.portainer.entrypoints=websecure"
       - "traefik.http.routers.portainer.middlewares=dashboard-auth,cloudflare-ipallowlist@file"
       - "traefik.http.routers.portainer.tls.certresolver=cloudflare"
-      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+      - "traefik.http.services.portainer.loadbalancer.server.port=${PORTAINER_PORT:-9000}"
