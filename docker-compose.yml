@@ -4,7 +4,6 @@ x-basics: &basics
   restart: unless-stopped
 services:
   portainer:
-    container_name: admin
     image: portainer/portainer-ce:latest
     <<: *basics
     ports:
