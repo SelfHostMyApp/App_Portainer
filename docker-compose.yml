@@ -23,3 +23,5 @@ services:
       - "traefik.http.routers.portainer.middlewares=dashboard-auth,cloudflare-ipallowlist@file"
       - "traefik.http.routers.portainer.tls.certresolver=cloudflare"
       - "traefik.http.services.portainer.loadbalancer.server.port=${PORTAINER_PORT:-9000}"
+      - "traefik.http.routers.portainer.middlewares=${PORTAINER_AUTH:+portainer-auth}"
+      - "traefik.http.middlewares.portainer-auth.basicauth.users=${PORTAINER_AUTH}"
