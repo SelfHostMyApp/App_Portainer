@@ -10,7 +10,7 @@ services:
     ports:
       - ${PORTAINER_PORT:-9000}:9000
     volumes:
-      - /containers/data:/data
+      - ./volumes/portainer/data:/data
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
     networks:
